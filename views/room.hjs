@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" />
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.2.min.js"
+    integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+    integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous" />
+  <title>Admin</title>
+  <link rel="stylesheet" href="/stylesheets/admin.css" />
+  <script>
+    var pley = true;
+    function dl() {
+      if (document.getElementById('ndc').value != '') {
+        document.getElementById('ndc').style.color = '#fff';
+        document.getElementById('ndht').innerHTML = document.getElementById('ndht').innerHTML.replace('<br><br><br>', '')
+          + '<div class="khach">  <img src="" alt="" class="img" />'
+          + document.getElementById('ndc').value.replace(/<\/?[^>]+(>|$)/g, '')
+          + '<br /> <span>Đang gửi...</span></div><br><br><br>'; window.scroll(0, 10000);
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-12 border" style="background-color: #dfe4ea">
+        <div class="row">
+          <div class="col-sm-2 box_2">
+            <img src="https://www.fshare.vn/images/logo-new-year-320x100.gif" class="rounded mt-2" width="200vh"
+              height="65vh" />
+          </div>
+          <div class="col-sm-10 box_2">
+            <div class="row">
+              <div class="col-sm-1 box_2_1"></div>
+              <div class="col-sm-8 box_2_2">
+                <div class="input-group mb-3">
+                  <input type="text" class="form-control" placeholder="Tìm Kiếm" id="tim" name="tim" />
+                  <div class="input-group-append">
+                    <button class="btn" type="button" style="background: #cd1417; color: white"> <i
+                        class="fas fa-search"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-sm-3 box_2_3">
+                <div class="dropdown">
+                  <button type="button" class="btn btn dropdown-toggle" data-toggle="dropdown"
+                    style="background-color: #cd1417; color: white">
+                    Tùy Chọn
+                  </button>
+                  <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Tài Khoản</a>
+                    <a class="dropdown-item" href="#">Đăng Xuất</a>
+                    <a class="dropdown-item" href="#">Cài Đặt</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="height:655px;">
+      <div class="col-sm-2 ab">
+        <ul class="whosonline">
+          {{#roomUsers}}
+          <li class="abc"><a href="#" id="{{.}}">{{.}}</a></li>
+          {{/roomUsers}}
+      </div>
+      <div class="col-sm-8">
+        <div class="row a">
+          {{!-- <div id="ndht">aaaa</div> --}}
+        </div>
+        <div class="row b" id="hopchat">
+          <div class="type_msg">
+            <textarea type="text" class="write_msg" placeholder="Type a message"></textarea>
+            <button class="msg_send_btn" style="outline: none"><i class="fas fa-paper-plane"
+                aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-2" style="background: #eee">Something </div>
+    </div>
+  </div>
+</body>
+
+<script>
+  if ('{{room}}' == '') location.href = '/';
+  var socket = io();
+  var users = {};
+  socket.on("new-user-joined", function (name, room) {
+    if (room == '{{room}}') {
+      $('div.ab ul.whosonline').append('<li class="abc"><a href="#" id="'+ name+'">'+name+'</a></li>');
+    }
+  });
+
+  $('.ab .whosonline').click(function(){
+    console.log('click');
+
+    //$('div.ab ul.whosonline').each(function(index,value){
+      //var click = ($('div.ab ul.whosonline li').text());
+      //console.log(click);
+    //})
+  })
+
+  $('.write_msg').keypress(function (e) {
+    if (e.keyCode == 13) {
+      var msg = $(this).val();
+      $(this).val('');
+      socket.emit('send message', msg, $('.listuser li').text())
+      console.log("ok")
+    }
+  });
+
+  $('.type_msg .msg_send_btn').click(function () {
+    console.log("ok");
+  });
+
+  /* $(document).ready(function () {
+    $(".msg-input-box").keydown(function (e) {
+      if (e.which == 13) {
+        e.preventDefault();
+        sendmsg($(this).val());
+      }
+    });
+  }); */
+</script>
+
+</html>
