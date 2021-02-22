@@ -74,7 +74,7 @@
       <div class="col-sm-2 ab">
         <ul class="whosonline">
           {{#roomUsers}}
-          <li class="abc"><a href="#" id="{{.}}">{{.}}</a></li>
+          <li class="abc"><a onclick="show({{.}})" href="#" id="{{.}}">{{.}}</a></li>
           {{/roomUsers}}
       </div>
       <div class="col-sm-8">
@@ -100,13 +100,17 @@
   var users = {};
   socket.on("new-user-joined", function (name, room) {
     if (room == '{{room}}') {
-      $('div.ab ul.whosonline').append('<li class="abc"><a href="#" id="'+ name+'">'+name+'</a></li>');
+      $('div.ab ul.whosonline').append('<li class="abc"><a onclick="'+ show(name)+'" href="#" id="'+ name+'">'+name+'</a></li>');
     }
   });
 
-  $('.ab .whosonline').click(function(){
-    console.log('click');
+  function show(id){
+    console.log(id)
+  }
 
+  $('.ab .whosonline').click(function(){
+     const id = $('a', this).attr('id');
+    console.log(id);
     //$('div.ab ul.whosonline').each(function(index,value){
       //var click = ($('div.ab ul.whosonline li').text());
       //console.log(click);
