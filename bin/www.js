@@ -57,11 +57,12 @@ function onListening() {
 }
 
 var MongoClient = require("mongodb").MongoClient;
+const {indexOf} = require("underscore");
 var mongoURI = "mongodb://localhost:27017/express";
 var roomUsers = [];
 
 io.sockets.on("connection", function (socket) {
-    socket.on("joinRoom", function (name, roomToJoinTo, newRoom) {
+    socket.on("joinRoom", function (name, roomToJoinTo) {
         MongoClient.connect(mongoURI, function (err, db) {
             if (err) {
                 return console.dir(err);
@@ -80,36 +81,44 @@ io.sockets.on("connection", function (socket) {
             }, {users: 1});
             stream.on("data", function (item) {
                 roomUsers[socket.id] = {
-                    name: name,
-                    inroom: roomToJoinTo
+                    "name": name,
+                    "inroom": roomToJoinTo
                 };
-
                 io.emit("joined", JSON.stringify(item.users));
-                // console.log('new-user-joined name: %s roomToJoinTo: %s', name, roomToJoinTo);
+                console.log('new-user-joined name: %s roomToJoinTo: %s', name, roomToJoinTo);
                 socket.broadcast.emit("new-user-joined", name, roomToJoinTo);
-                // console.log('=========> newRoomCreated:|%s|', newRoom);
-                if (newRoom) 
-                    socket.broadcast.emit("new-room-created", roomToJoinTo);
-                
-
             });
         });
     });
 
+    socket.on("private", function (admin ,data, sendto) {
+    //client k nhận
+        // socket.emit("private-msg", {
+        //     from: socket.nickname,
+        //     msg: data,
+        //     to: sendto
+        // });
+        io.emit("private-msg-a", {
+            from: sendto,
+            msg: data,
+            to: admin
+        });
+
+        io.emit("private-msg-b", {
+            from: sendto,
+            msg: data,
+            to: admin
+        });
+        
+        // console.log(socket.nickname, data, sendto)
+    });
+
     socket.on("disconnect", function () {
-        if (typeof roomUsers[socket.id] !== "undefined") {
+        if (typeof roomUsers[socket.id] !== 'undefined') {
             io.emit("user-left-room", roomUsers[socket.id].inroom, roomUsers[socket.id].name);
             sessionDel(roomUsers[socket.id].inroom, roomUsers[socket.id].name);
         }
     });
-
-    socket.on("send message",function(data,sendto){
-        var nick = 'ADMIN';
-        users[sendto].emit('new message',{msg: data, nick, sendto: sendto});
-        users[nick].emit('new message',{msg: data, nick, sendto: sendto});
-        console.log(nick+" gui "+ data + "den"+ sendto);
-    })
-
 });
 
 function sessionDel(room, user) {
@@ -117,7 +126,6 @@ function sessionDel(room, user) {
         if (err) {
             return console.dir(err);
         }
-
         console.log("User %s disconnected from room #%s", user, room);
         db.collection("rooms").update({
             _id: room
@@ -131,4 +139,3 @@ function sessionDel(room, user) {
         });
     });
 }
-

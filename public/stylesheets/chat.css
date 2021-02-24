@@ -15,7 +15,7 @@ body
         {
             background: #F7F7F7;
             display: inline-block;
-            width: 100%; 
+            width: 99.5%; 
             text-align: left;
             padding: 1px 2px 8px 5px;
             border-bottom: 1px #ccc solid;
@@ -32,9 +32,10 @@ body
         .loichao
         {
             display: inline-block;
-            width: 97%;
+            width: 99%;
             text-align: left;
             padding: 2px 2px 8px 5px;
+            border-bottom: 1px #ccc solid;
         }
         .khach
         {
@@ -56,13 +57,24 @@ body
         }
         .admin
         {
-            line-height: 23px;
+            line-height: 20px;
             display: inline-block;
-            width: 97%;
-            text-align: right;
-            padding: 2px 5px 4px 2px;
-            border-top: 1px #ccc solid;
+            width: 99%;
+            text-align: left;
+            padding: 5px 0px 10px 10px;
+            border-bottom: 1px #ccc solid;
             color: #333;
+            margin-top: 0.5%;
+        }
+        .client{
+            line-height: 20px;
+            display: inline-block;
+            width: 99%;
+            text-align: right;
+            padding: 5px 0px 10px 10px;
+            border-bottom: 1px #ccc solid;
+            color: #333;
+            margin-top: 0.5%;
         }
         .admin .img
         {
@@ -100,20 +112,36 @@ body
             width: 11px !important;
             height: 11px !important;
         }
-        body::-webkit-scrollbar-track
-        {
-            -webkit-box-shadow: inset 0 0 0px rgba(0, 0, 0, 0.0);
-            background-color: #3b3b3b;
-        }
-        body::-webkit-scrollbar
-        {
-            width: 1px;
-            background-color: #3b3b3b;
-        }
-        body::-webkit-scrollbar-thumb
-        {
-            width: 1px;
-            background-color: #3b3b3b;
-        }
         @media screen and (max-device-width: 480px){body{-webkit-text-size-adjust: none;}} 
         input{border-radius: 5px;}
+
+        .type_msg{
+            position: relative;
+            width:100%;
+            height:100%;
+            background: white;
+            border-top: 2px solid #ccc
+        }
+        .write_msg{
+            width: 93%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
+            position: absolute;
+            resize: none;
+            word-break: break-word;
+            border: none;
+            outline: none;
+            padding: 10px;
+        }
+        .msg_send_btn{
+            position: absolute;
+            width: 5%;
+            height: 70%;
+            right: 0;
+            color: #000;
+            font-size: 17px;
+            margin: 1% 1% 1% 1%;
+            background: #fff;
+            border: none;
+            display: block;
+        }

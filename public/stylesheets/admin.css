@@ -207,6 +207,39 @@ img{
     display: block;
 }
 
+#ndht{
+    width: 100%;
+    padding: 1%;
+}
+
+.admin{
+    width: 20%;
+    min-height: 5%;
+    padding: 1%;
+    background: rgb(0, 132, 255);
+    word-break: break-word;
+    overflow-x: hidden;
+    border-radius: 20px;
+    margin-left: 80%;
+    text-align: right;
+    margin-top: 0.5%;
+    color: #000;
+}
+
+.client{
+    width: 20%;
+    min-height: 5%;
+    padding: 1%;
+    background: rgb(0, 132, 255);
+    word-break: break-word;
+    overflow-x: hidden;
+    border-radius: 20px;
+    margin-right: 80%;
+    text-align: left;
+    margin-top: 0.5%;
+    color: #000;
+}
+
 
 
 
