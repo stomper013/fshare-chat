@@ -57,7 +57,7 @@ function onListening() {
 }
 
 var MongoClient = require("mongodb").MongoClient;
-const {indexOf} = require("underscore");
+const {indexOf, isNull} = require("underscore");
 var mongoURI = "mongodb://localhost:27017/express";
 var roomUsers = [];
 var messages = [];
@@ -99,25 +99,7 @@ io.sockets.on("connection", function (socket) {
             if (err) {
                 return console.dir(err);
             }else{
-                // db.collection("messages").find({
-                //     $or:[
-                //         {$and: [
-                //             {"sender": admin},
-                //             {"recipient": sendto}
-                //         ]},
-                //         {$and: [
-                //             {"sender": sendto},
-                //             {"recipient": admin}
-                //         ]}
-                //     ]
-                // },function(err,result){
-                //     if(err){
-                //         console.log(err)
-                //     }else{
-                        
-                //     }
-                // })
-                db.collection("messages").update({
+                db.collection("messages").find({
                     $or:[
                         {$and: [
                             {"sender": admin},
@@ -128,11 +110,66 @@ io.sockets.on("connection", function (socket) {
                             {"recipient": admin}
                         ]}
                     ]
-                },{
-                    $push: {
-                        msg: data,
+                },
+                function(err,result){
+                    if(err){
+                        
+                    }else{
+                        if(result == ){
+                            console.log('có')
+                            db.collection("messages").update({
+                                $or:[
+                                    {$and: [
+                                        {"sender": admin},
+                                        {"recipient": sendto}
+                                    ]},
+                                    {$and: [
+                                        {"sender": sendto},
+                                        {"recipient": admin}
+                                    ]}
+                                ]
+                            },{
+                                $push: {
+                                    msg: data,
+                                }
+                            })
+                        }else{
+                            db.collection("messages").insert({
+                                "sender": admin,
+                                "msg": [data],
+                                "recipient": sendto
+                            })
+                        }
+                        
                     }
                 })
+                
+
+
+
+                //////test
+                // db.collection("messages").insert({
+                //     "sender": admin,
+                //     "msg": [data],
+                //     "recipient": sendto
+                // })
+
+                // db.collection("messages").update({
+                //     $or:[
+                //         {$and: [
+                //             {"sender": admin},
+                //             {"recipient": sendto}
+                //         ]},
+                //         {$and: [
+                //             {"sender": sendto},
+                //             {"recipient": admin}
+                //         ]}
+                //     ]
+                // },{
+                //     $push: {
+                //         msg: data,
+                //     }
+                // })
             
                 io.emit("private-msg-a", {
                     from: sendto,
