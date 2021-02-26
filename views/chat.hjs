@@ -11,8 +11,7 @@
         <script src="/socket.io/socket.io.js"></script>
         <title>Chat</title>
         <link rel="stylesheet" href="/stylesheets/chat.css"/>
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" 
-        integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     </head>
 
     <body>
@@ -29,16 +28,16 @@
         </div>
         <div id="hopchat" style="height: 46px">
             <form id="formchat" style="width:100%; height: 40px; background: #3b3b3b;padding: 8px 0px 0px 3px;" name="formchat">
-                <textarea class="write_msg" spellcheck="false"  type="text" maxlength="500"
-                    style="width: 76%; height: 20px; padding: 8px 0px 3px 5px; float:left; background: #fff;border-radius: 5px; resize: none; outline: none; border: none" 
-                    placeholder="Nhập nội dung..." autocomplete="off"></textarea>
-                <button style="width:20%;height:31px;padding: 8px 0px 3px 5px;display:inline; float: right;border-radius: 5px;margin-right: 0.5%;"><i class="fas fa-paper-plane" aria-hidden="true"></i></button>
-                
+                <textarea class="write_msg" spellcheck="false" type="text" maxlength="500" style="width: 76%; height: 20px; padding: 8px 0px 3px 5px; float:left; background: #fff;border-radius: 5px; resize: none; outline: none; border: none" placeholder="Nhập nội dung..." autocomplete="off"></textarea>
+                <button style="width:20%;height:31px;padding: 8px 0px 3px 5px;display:inline; float: right;border-radius: 5px;margin-right: 0.5%;">
+                    <i class="fas fa-paper-plane" aria-hidden="true"></i>
+                </button>
+
             </form>
         </div>
     </body>
     <script>
-        
+
         if ('{{ room }}' == '') 
             location.href = '/';
         
@@ -48,17 +47,17 @@
         socket.emit("joinRoom", '{{ username }}', '{{ room }}', {{ newRoom }});
 
         socket.on("user-left-room", function (room, name) {
-            console.log('User "' + name + '" disconnected');
         });
 
-        socket.on("private-msg-b", function (data) {
-            console.log('client', data)
-            if (userName == data.to) {
+        socket.on("private-msg-a", function (data) {
+            if (data.from == admin && data.to == userName) {
                 $('#ndht').append('<div class="admin">' + data.msg + '</div>');
                 $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
             }else{
-                $('#ndht').append('<div class="client">' + data.msg + '</div>');
-                $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
+                if(data.from == userName){
+                    $('#ndht').append('<div class="client">' + data.msg + '</div>');
+                    $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
+                }
             }
         })
 
@@ -74,7 +73,7 @@
 
         function sendNew(msg) {
             if (msg != "") {
-                socket.emit("private",admin,msg, userName);
+                socket.emit("private", admin, msg, userName);
                 $('.write_msg').val('');
             }
         }

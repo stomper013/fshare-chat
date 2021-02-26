@@ -141,6 +141,13 @@
                     })
                 }
             });
+
+            socket.on("user-left-room",function(room, name){
+                if(room=='{{room}}'){
+                    console.log('User "'+name + '" disconnected');
+                    $('#'+name).parent().remove();
+                }
+            })
         </script>
     </body>
 </html>

@@ -60,6 +60,9 @@ var MongoClient = require("mongodb").MongoClient;
 const {indexOf} = require("underscore");
 var mongoURI = "mongodb://localhost:27017/express";
 var roomUsers = [];
+var messages = [];
+var newMessageCreated = true
+
 
 io.sockets.on("connection", function (socket) {
     socket.on("joinRoom", function (name, roomToJoinTo) {
@@ -92,23 +95,52 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("private", function (admin ,data, sendto) {
-    //client k nhận
-        // socket.emit("private-msg", {
-        //     from: socket.nickname,
-        //     msg: data,
-        //     to: sendto
-        // });
-        io.emit("private-msg-a", {
-            from: sendto,
-            msg: data,
-            to: admin
-        });
-
-        io.emit("private-msg-b", {
-            from: sendto,
-            msg: data,
-            to: admin
-        });
+        MongoClient.connect(mongoURI, function (err, db) {
+            if (err) {
+                return console.dir(err);
+            }else{
+                // db.collection("messages").find({
+                //     $or:[
+                //         {$and: [
+                //             {"sender": admin},
+                //             {"recipient": sendto}
+                //         ]},
+                //         {$and: [
+                //             {"sender": sendto},
+                //             {"recipient": admin}
+                //         ]}
+                //     ]
+                // },function(err,result){
+                //     if(err){
+                //         console.log(err)
+                //     }else{
+                        
+                //     }
+                // })
+                db.collection("messages").update({
+                    $or:[
+                        {$and: [
+                            {"sender": admin},
+                            {"recipient": sendto}
+                        ]},
+                        {$and: [
+                            {"sender": sendto},
+                            {"recipient": admin}
+                        ]}
+                    ]
+                },{
+                    $push: {
+                        msg: data,
+                    }
+                })
+            
+                io.emit("private-msg-a", {
+                    from: sendto,
+                    msg: data,
+                    to: admin
+                });
+            }
+        })
         
         // console.log(socket.nickname, data, sendto)
     });
@@ -127,6 +159,7 @@ function sessionDel(room, user) {
             return console.dir(err);
         }
         console.log("User %s disconnected from room #%s", user, room);
+        
         db.collection("rooms").update({
             _id: room
         }, {
@@ -134,6 +167,8 @@ function sessionDel(room, user) {
                 users: user
             }
         }, {upsert: true});
+
+
         db.collection("sessions").remove({
             session: new RegExp('\\"username\\":\\"' + user + '\\",\\"room\\":\\"' + room + '\\"')
         });
