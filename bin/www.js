@@ -57,7 +57,7 @@ function onListening() {
 }
 
 var MongoClient = require("mongodb").MongoClient;
-const {indexOf, isNull} = require("underscore");
+const {indexOf, isNull, functions} = require("underscore");
 var mongoURI = "mongodb://localhost:27017/express";
 var roomUsers = [];
 var messages = [];
@@ -122,7 +122,7 @@ io.sockets.on("connection", function (socket) {
                 //     }
                 // })
 
-                db.collection("messages").find({
+                db.collection("messages").update({
                     $or:[
                         {$and: [
                             {"sender": admin},
@@ -133,16 +133,21 @@ io.sockets.on("connection", function (socket) {
                             {"recipient": admin}
                         ]}
                     ]
-                },function(err,result){
-                    console.log(err,result)
-                })
-            
+                },{
+                    $setOnInsert: {
+                        "sender": admin,
+                        "recipient": sendto
+                    },
+                    $push: {
+                        msg: data,
+                    }
+                },{upsert: true})
+
                 io.emit("private-msg-a", {
                     from: sendto,
                     msg: data,
                     to: admin
-                });
-
+                })
             }
         })
         
