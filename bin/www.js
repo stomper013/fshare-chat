@@ -99,61 +99,12 @@ io.sockets.on("connection", function (socket) {
             if (err) {
                 return console.dir(err);
             }else{
-                db.collection("messages").find({
-                    $or:[
-                        {$and: [
-                            {"sender": admin},
-                            {"recipient": sendto}
-                        ]},
-                        {$and: [
-                            {"sender": sendto},
-                            {"recipient": admin}
-                        ]}
-                    ]
-                },
-                function(err,result){
-                    if(err){
-                        
-                    }else{
-                        if(result == ){
-                            console.log('có')
-                            db.collection("messages").update({
-                                $or:[
-                                    {$and: [
-                                        {"sender": admin},
-                                        {"recipient": sendto}
-                                    ]},
-                                    {$and: [
-                                        {"sender": sendto},
-                                        {"recipient": admin}
-                                    ]}
-                                ]
-                            },{
-                                $push: {
-                                    msg: data,
-                                }
-                            })
-                        }else{
-                            db.collection("messages").insert({
-                                "sender": admin,
-                                "msg": [data],
-                                "recipient": sendto
-                            })
-                        }
-                        
-                    }
-                })
                 
-
-
-
-                //////test
                 // db.collection("messages").insert({
                 //     "sender": admin,
                 //     "msg": [data],
                 //     "recipient": sendto
                 // })
-
                 // db.collection("messages").update({
                 //     $or:[
                 //         {$and: [
@@ -170,12 +121,28 @@ io.sockets.on("connection", function (socket) {
                 //         msg: data,
                 //     }
                 // })
+
+                db.collection("messages").find({
+                    $or:[
+                        {$and: [
+                            {"sender": admin},
+                            {"recipient": sendto}
+                        ]},
+                        {$and: [
+                            {"sender": sendto},
+                            {"recipient": admin}
+                        ]}
+                    ]
+                },function(err,result){
+                    console.log(err,result)
+                })
             
                 io.emit("private-msg-a", {
                     from: sendto,
                     msg: data,
                     to: admin
                 });
+
             }
         })
         

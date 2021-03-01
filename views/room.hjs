@@ -119,7 +119,7 @@
 
             socket.on("private-msg-a", function (data) {
                 console.log('admin', data)
-                    if (data.from == 'admin') {
+                    if (data.from == 'admin' && data.to == userClick) {
                         $('#ndht').append('<div class="admin">' + data.msg + '</div>');
                         $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
                     }else{
