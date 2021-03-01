@@ -58,7 +58,7 @@ function onListening() {
 
 var MongoClient = require("mongodb").MongoClient;
 const {indexOf, isNull, functions} = require("underscore");
-var mongoURI = "mongodb+srv://admin:admin@cluster0.uadkt.mongodb.net/express?retryWrites=true&w=majority";
+var mongoURI = process.env.MONGO_URI;
 var roomUsers = [];
 var messages = [];
 var newMessageCreated = true
@@ -70,7 +70,6 @@ io.sockets.on("connection", function (socket) {
             if (err) {
                 return console.dir(err);
             }
-
             db.collection("rooms").update({
                 _id: roomToJoinTo
             }, {

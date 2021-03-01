@@ -10,7 +10,7 @@ router.get("/", function (req, res, next) {
   var roomUsers = [];
   var newRoomCreated = true;
 
-  var mongoURI = "mongodb+srv://admin:admin@cluster0.uadkt.mongodb.net/express?retryWrites=true&w=majority";
+  var mongoURI = process.env.MONGO_URI;
 
   MongoClient.connect(mongoURI, function (err, db) {
     if (err) {
