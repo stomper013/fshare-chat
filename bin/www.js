@@ -58,7 +58,7 @@ function onListening() {
 
 var MongoClient = require("mongodb").MongoClient;
 const {indexOf, isNull, functions} = require("underscore");
-var mongoURI = "mongodb://localhost:27017/express";
+var mongoURI = "mongodb+srv://admin:admin@cluster0.uadkt.mongodb.net/express?retryWrites=true&w=majority";
 var roomUsers = [];
 var messages = [];
 var newMessageCreated = true

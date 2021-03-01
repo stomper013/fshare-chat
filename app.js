@@ -24,7 +24,7 @@ app.use(expressSession({
 			resave: true,
 			saveUninitialized: true,
 			store:new MongoStore({
-					url: 'mongodb://localhost:27017/express',
+					url: 'mongodb+srv://admin:admin@cluster0.uadkt.mongodb.net/express?retryWrites=true&w=majority',
 					auto_reconnect:true
 			})
 }));

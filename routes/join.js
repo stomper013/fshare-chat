@@ -5,7 +5,7 @@ var UAParser = require('../node_modules/ua-parser-js');
 var uuid = require('../node_modules/node-uuid');
 var MongoClient = require('mongodb').MongoClient;
 
-var mongoURI = "mongodb://localhost:27017/express";
+var mongoURI = "mongodb+srv://admin:admin@cluster0.uadkt.mongodb.net/express?retryWrites=true&w=majority";
 
 
 router.get('/', function(req, res, next) {
