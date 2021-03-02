@@ -1,6 +1,7 @@
 var app = require("../app");
 var debug = require("debug")("app:server");
 var http = require("http");
+require("dotenv").config();
 
 var port = normalizePort(process.env.PORT || process.argv[2] || "4000");
 app.set("port", port);

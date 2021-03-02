@@ -1,12 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var expressSession = require('../node_modules/express-session');
 var UAParser = require('../node_modules/ua-parser-js');
 var uuid = require('../node_modules/node-uuid');
-var MongoClient = require('mongodb').MongoClient;
-
-var mongoURI = process.env.MONGO_URI;
-
 
 router.get('/', function(req, res, next) {
    var parser = new UAParser();

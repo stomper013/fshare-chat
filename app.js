@@ -6,6 +6,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var uuid = require('node-uuid');
+require("dotenv").config();
 
 var app = express();
 

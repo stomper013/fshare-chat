@@ -1,3 +1,4 @@
-# dependencies
-/node_modules
-.env
+/node_moudules
+/site-ui-instructions.txt
+/site-temp-images
+/.env

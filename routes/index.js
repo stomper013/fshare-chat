@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
-var expressSession = require("../node_modules/express-session");
 var MongoClient = require("mongodb").MongoClient;
+
 
 router.get("/", function (req, res, next) {
   var room = req.session.room;
