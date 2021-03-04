@@ -109,16 +109,22 @@ io.sockets.on("connection", function (socket) {
                             {"recipient": admin}
                         ]}
                     ]
-                },{
+                },
+                {
                     $setOnInsert: {
                         "sender": admin,
                         "recipient": sendto
                     },
                     $push: {
-                        msg: data,
+                        data:{
+                            sender: sendto,
+                            message: data,
+                            recipient: admin,
+                        }
                     }
-                    
-                },{upsert: true})
+                }
+                ,{upsert: true})
+                
 
                 io.emit("private-msg-a", {
                     from: sendto,
