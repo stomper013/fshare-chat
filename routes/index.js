@@ -38,7 +38,7 @@ router.get("/", function (req, res, next) {
     });
 
     stream.on("end", function () {
-      res.render("room", {
+      res.render("admin", {
         room: room,
         username: username,
         roomUsers: roomUsers,
