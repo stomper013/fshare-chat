@@ -3,7 +3,7 @@ var debug = require("debug")("app:server");
 var http = require("http");
 require("dotenv").config();
 
-var port = normalizePort(process.env.PORT || process.argv[2] || "4000");
+var port = normalizePort(process.env.PORT || process.argv[2]);
 app.set("port", port);
 console.log("listening port:" + port);
 
@@ -61,8 +61,7 @@ var MongoClient = require("mongodb").MongoClient;
 const {indexOf, isNull, functions} = require("underscore");
 var mongoURI = process.env.MONGO_URI;
 var roomUsers = [];
-var messages = [];
-var newMessageCreated = true
+
 
 
 io.sockets.on("connection", function (socket) {
@@ -99,29 +98,6 @@ io.sockets.on("connection", function (socket) {
             if (err) {
                 return console.dir(err);
             }else{
-                
-                // db.collection("messages").insert({
-                //     "sender": admin,
-                //     "msg": [data],
-                //     "recipient": sendto
-                // })
-                // db.collection("messages").update({
-                //     $or:[
-                //         {$and: [
-                //             {"sender": admin},
-                //             {"recipient": sendto}
-                //         ]},
-                //         {$and: [
-                //             {"sender": sendto},
-                //             {"recipient": admin}
-                //         ]}
-                //     ]
-                // },{
-                //     $push: {
-                //         msg: data,
-                //     }
-                // })
-
                 db.collection("messages").update({
                     $or:[
                         {$and: [
@@ -141,6 +117,7 @@ io.sockets.on("connection", function (socket) {
                     $push: {
                         msg: data,
                     }
+                    
                 },{upsert: true})
 
                 io.emit("private-msg-a", {
@@ -151,7 +128,6 @@ io.sockets.on("connection", function (socket) {
             }
         })
         
-        // console.log(socket.nickname, data, sendto)
     });
 
     socket.on("disconnect", function () {

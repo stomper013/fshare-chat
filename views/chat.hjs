@@ -18,12 +18,13 @@
         <div id="main">
             <div id="loichaobatdau">
                 <div class="nhanvien">
-                    <img class="img" src="fshare.png" alt="" style="width:64px;height: 64px">aaaa
+                    <img class="img" src="fshare.png" alt="" style="width:64px;height: 64px">Chị Nhi
                 </div>
-                <div class="loichao">aaaaa</div>
+                <div class="loichao" id="first">I'm Robot</div>
+                <div class="loichao" id="second">Bạn có cần trợ giúp về vấn đề gì?</div>
             </div>
             <div id="ndht" style="padding-bottom: 44px">
-                {{!-- <div class="admin"></div> --}}
+                
             </div>
         </div>
         <div id="hopchat" style="height: 46px">
@@ -37,6 +38,19 @@
         </div>
     </body>
     <script>
+        $(function(){
+
+            $('#first').hide();
+            $('#second').hide();
+
+            setTimeout(function(){
+                $('#first').fadeIn('slow');
+            },3000);
+
+            setTimeout(function(){
+                $('#second').fadeIn('slow');
+            },5000);
+        });
 
         if ('{{ room }}' == '') 
             location.href = '/';

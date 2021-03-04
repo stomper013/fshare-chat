@@ -25,8 +25,8 @@ app.use(expressSession({
 			resave: true,
 			saveUninitialized: true,
 			store:new MongoStore({
-        url: process.env.MONGO_URI,
-				autoReconnect:true,
+        url: process.env.MONGO_URI,useNewUrlParser: true, useUnifiedTopology: true,
+				auto_Reconnect:true,
 			})
 }));
 app.use(require('less-middleware')(path.join(__dirname, 'public')));

@@ -15,12 +15,12 @@ body
         {
             background: #F7F7F7;
             display: inline-block;
-            width: 99.5%; 
+            width: 100%; 
             text-align: left;
-            padding: 1px 2px 8px 5px;
+            /* padding: 1px 2px 8px 5px; */
             border-bottom: 1px #ccc solid;
             color: #333;
-            margin-bottom: 8px;
+            /* margin-bottom: 8px; */
         }
         .nhanvien .img
         {
@@ -32,9 +32,9 @@ body
         .loichao
         {
             display: inline-block;
-            width: 99%;
+            width: 99.7%;
             text-align: left;
-            padding: 2px 2px 8px 5px;
+            padding: 5px 0px 5px 5px;
             border-bottom: 1px #ccc solid;
         }
         .khach
@@ -57,24 +57,20 @@ body
         }
         .admin
         {
-            line-height: 20px;
             display: inline-block;
-            width: 99%;
+            width: 99.7%;
             text-align: left;
-            padding: 5px 0px 10px 10px;
+            padding: 5px 0px 5px 5px;
             border-bottom: 1px #ccc solid;
             color: #333;
-            margin-top: 0.5%;
         }
         .client{
-            line-height: 20px;
             display: inline-block;
-            width: 99%;
+            width: 99.7%;
             text-align: right;
-            padding: 5px 0px 10px 10px;
+            padding: 5px 5px 5px 0px;
             border-bottom: 1px #ccc solid;
             color: #333;
-            margin-top: 0.5%;
         }
         .admin .img
         {
