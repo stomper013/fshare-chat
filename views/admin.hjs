@@ -134,10 +134,10 @@
 
                 if(data.from == userClick || data.to == userClick){
                     if(data.to == admin){
-                        $('#ndht').append('<div class="admin">' + data.msg + '</div>');
+                        $('#ndht').append('<div class="client">' + data.msg + '</div>');
                         $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
                     }else{
-                        $('#ndht').append('<div class="client">' + data.msg + '</div>');
+                        $('#ndht').append('<div class="admin">' + data.msg + '</div>');
                         $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
                     }
                 }
