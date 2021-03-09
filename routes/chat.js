@@ -10,14 +10,13 @@ router.get("/", function (req, res, next) {
    var roomsList = [];
    var roomUsers = [];
    var newRoomCreated = true;
-
+   var admin = 'admin';
    var mongoURI = process.env.MONGO_URI;
 
    MongoClient.connect(mongoURI, function (err, db) {
       if (err) {
          return console.dir(err);
       }
-
       var roomsStream = db.collection("rooms").find();
       roomsStream.on("data", function (item) {
          if (item._id != "" && item._id != room) roomsList.push(item._id);

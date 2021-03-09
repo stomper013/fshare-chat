@@ -58,11 +58,11 @@ function onListening() {
 }
 
 var MongoClient = require("mongodb").MongoClient;
-const {indexOf, isNull, functions} = require("underscore");
 var mongoURI = process.env.MONGO_URI;
 var roomUsers = [];
-
-
+var itemMessage = '';
+var itemSender = '';
+var itemReceipient = '';
 
 io.sockets.on("connection", function (socket) {
     socket.on("joinRoom", function (name, roomToJoinTo) {
@@ -94,47 +94,50 @@ io.sockets.on("connection", function (socket) {
     });
 
     socket.on("private", function (admin ,data, sendto) {
-        MongoClient.connect(mongoURI, function (err, db) {
-            if (err) {
-                return console.dir(err);
-            }else{
-                db.collection("messages").update({
-                    $or:[
-                        {$and: [
-                            {"sender": admin},
-                            {"recipient": sendto}
-                        ]},
-                        {$and: [
-                            {"sender": sendto},
-                            {"recipient": admin}
-                        ]}
-                    ]
-                },
-                {
-                    $setOnInsert: {
-                        "sender": admin,
-                        "recipient": sendto
-                    },
-                    $push: {
-                        data:{
-                            sender: sendto,
-                            message: data,
-                            recipient: admin,
-                        }
-                    }
-                }
-                ,{upsert: true})
-                
+        saveMessage(admin,data,sendto);
+        io.emit("private-msg-a", {
+            from: sendto,
+            msg: data,
+            to: admin
+        })
+    });
 
-                io.emit("private-msg-a", {
-                    from: sendto,
-                    msg: data,
-                    to: admin
+    socket.on("getHistory",function(admin,sendto){
+        MongoClient.connect(mongoURI, function(err, db){
+            if(err){
+                return console.dir(err);
+            }
+
+            if (typeof sendto === 'undefined') {
+                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', sendto)
+                io.to(sendto).emit('redirect', '/');
+            } else {
+                var chatHistory = db.collection("messages").find(
+                    {
+                        $or:[
+                            {$and: [
+                                {"sender": admin},
+                                {"recipient": sendto}
+                            ]},
+                            {$and: [
+                                {"sender": sendto},
+                                {"recipient": admin}
+                            ]}
+                        ]
+                    })
+
+                chatHistory.on("data",function(item){
+                    for(var i=0, iLen = item.data.length; i<iLen; i++){
+                        // console.log(item.data[i])
+                        itemMessage = item.data[i].message;
+                        itemReceipient = item.data[i].recipient;
+                        itemSender = item.data[i].sender;
+                        io.emit('loadHistory',{sender: itemSender, message: itemMessage, recipient: itemReceipient })
+                    }
                 })
             }
         })
-        
-    });
+    })
 
     socket.on("disconnect", function () {
         if (typeof roomUsers[socket.id] !== 'undefined') {
@@ -143,6 +146,42 @@ io.sockets.on("connection", function (socket) {
         }
     });
 });
+
+function saveMessage(admin, data, sendto){
+    console.log('Save message: ', admin + ' - ' + data + ' - ' + sendto)
+    MongoClient.connect(mongoURI, function (err, db) {
+        if(err){
+            return console.dir(err);
+        }else{
+            db.collection("messages").update({
+                $or:[
+                    {$and: [
+                        {"sender": admin},
+                        {"recipient": sendto}
+                    ]},
+                    {$and: [
+                        {"sender": sendto},
+                        {"recipient": admin}
+                    ]}
+                ]
+            },
+            {
+                $setOnInsert: {
+                    "sender": admin,
+                    "recipient": sendto
+                },
+                $push: {
+                    data:{
+                        sender: sendto,
+                        message: data,
+                        recipient: admin,
+                    }
+                }
+            }
+            ,{upsert: true})
+        }
+    })
+}
 
 function sessionDel(room, user) {
     MongoClient.connect(mongoURI, function (err, db) {

@@ -34,7 +34,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var routes = require('./routes/join');
 var chat = require('./routes/chat');
-var admin = require('./routes/index');
+var admin = require('./routes/admin');
 
 app.use('/', routes);
 app.use('/chat',chat);

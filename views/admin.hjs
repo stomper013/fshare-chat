@@ -74,12 +74,13 @@
                     </div>
                     <div class="col-sm-8">
                         <div class="row a">
-                            <div id="ndht"></div>
+                            <div id="ndht">
+                            </div>
                         </div>
                         <div class="row b" id="hopchat">
                             <div class="type_msg">
                                 <textarea type="text" class="write_msg" placeholder="Type a message"></textarea>
-                                <button class="msg_send_btn" style="outline: none">
+                                <button class="msg_send_btn" style="outline: none" >
                                     <i class="fas fa-paper-plane" aria-hidden="true"></i>
                                 </button>
                             </div>
@@ -92,9 +93,6 @@
         </body>
 
         <script>
-            if ('{{ room }}' == '') 
-                location.href = '/';
-            
             var socket = io();
             var userClick = '';
             var admin = 'admin';
@@ -113,20 +111,8 @@
                 if (msg != "") {
                     socket.emit("private",userClick,msg,admin);
                     $('.write_msg').val('');
-                    //console.log('msg', msg);
                 }
             }
-
-            socket.on("private-msg-a", function (data) {
-                console.log('admin', data)
-                    if (data.from == 'admin' && data.to == userClick) {
-                        $('#ndht').append('<div class="admin">' + data.msg + '</div>');
-                        $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
-                    }else{
-                        $('#ndht').append('<div class="client">' + data.msg + '</div>');
-                        $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
-                    }
-            })
 
             socket.on("new-user-joined", function (name, room) {
                 if (room == '{{ room }}') {
@@ -135,10 +121,41 @@
                         if ($(this).text() == name) {
                             $(this).on("click", function () {
                                 userClick = $(this).text();
+                                getHistory(admin,userClick);
                                 console.log('User click: ' + userClick);
                             })
                         }
                     })
+                }
+            });
+
+            socket.on("private-msg-a", function (data) {
+                //console.log('111',data)
+
+                if(data.from == userClick || data.to == userClick){
+                    if(data.to == admin){
+                        $('#ndht').append('<div class="admin">' + data.msg + '</div>');
+                        $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
+                    }else{
+                        $('#ndht').append('<div class="client">' + data.msg + '</div>');
+                        $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
+                    }
+                }
+            })
+
+            function getHistory(admin,userClick){
+                $('#ndht').html('');
+                socket.emit("getHistory", admin,userClick)
+            }
+
+            socket.on('loadHistory', function(history) {
+                //console.log('123',history);
+                if (history.sender == admin && history.recipient == userClick) {
+                    $('#ndht').append('<div class="admin">' + history.message + '</div>');
+                    $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
+                }else{
+                    $('#ndht').append('<div class="client">' + history.message + '</div>');
+                    $('#ndht').scrollTop($('#ndht')[0].scrollHeight);
                 }
             });
 
@@ -148,6 +165,14 @@
                     $('#'+name).parent().remove();
                 }
             })
+
+            socket.on('redirect', function (href) {
+                location.href = href;
+            });
+
+            window.onbeforeunload = function () {
+            socket.emit('disconnect');
+            };
         </script>
     </body>
 </html>
